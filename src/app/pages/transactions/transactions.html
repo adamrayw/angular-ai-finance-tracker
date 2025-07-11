@@ -1,25 +1,114 @@
- <h2 class="text-2xl font-bold mb-4">Transactions</h2>
-    <table class="w-full table-auto border border-gray-200">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 border">Date</th>
-          <th class="p-2 border">Description</th>
-          <th class="p-2 border">Amount</th>
-          <th class="p-2 border">Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="text-center">
-          <td class="p-2 border">2025-07-01</td>
-          <td class="p-2 border">Salary</td>
-          <td class="p-2 border text-green-600">+ Rp 10.000.000</td>
-          <td class="p-2 border">Income</td>
-        </tr>
-        <tr class="text-center">
-          <td class="p-2 border">2025-07-03</td>
-          <td class="p-2 border">Groceries</td>
-          <td class="p-2 border text-red-600">- Rp 500.000</td>
-          <td class="p-2 border">Expense</td>
-        </tr>
-      </tbody>
-    </table>
+<h2 class="text-2xl font-bold mb-4">Transactions</h2>
+
+<!-- @if (editMode === true) {
+<h2 class="text-xl font-semibold">
+  Edit Transaksi
+  <span class="text-gray-500">ID: {{ editingId }}</span>
+</h2>
+} @else {
+<h2 class="text-xl font-semibold">
+  Tambah Transaksi
+  <span> </span>
+</h2>
+} -->
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="submitTransaction()"
+  class="space-y-4 border p-4 rounded bg-gray-50"
+>
+  <div>
+    <label for="desc">Deskripsi</label><br />
+    <input
+      id="desc"
+      type="text"
+      formControlName="description"
+      class="border rounded px-2 py-1 w-full"
+    />
+  </div>
+
+  <div>
+    <label>Jumlah</label><br />
+    <input
+      type="number"
+      formControlName="amount"
+      class="border rounded px-2 py-1 w-full"
+    />
+  </div>
+
+  <div>
+    <label>Jenis</label><br />
+    <select formControlName="type" class="border rounded px-2 py-1 w-full">
+      <option value="INCOME">Pemasukan</option>
+      <option value="EXPENSE">Pengeluaran</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Tanggal</label><br />
+    <input
+      type="date"
+      formControlName="date"
+      class="border rounded px-2 py-1 w-full"
+    />
+  </div>
+
+  <button
+    type="submit"
+    [disabled]="form.invalid"
+    class="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+  >
+    {{ editMode ? "Update Transaksi" : "Tambah Transaksi" }}
+  </button>
+</form>
+
+<hr class="my-6" />
+
+<table class="w-full border mt-4">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="p-2 border">Deskripsi</th>
+      <th class="p-2 border">Jumlah</th>
+      <th class="p-2 border">Jenis</th>
+      <th class="p-2 border">Tanggal</th>
+      <th class="p-2 border">Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (tx of transactions; track tx.id) {
+    <tr class="text-center">
+      <td class="border p-2">{{ tx.description }}</td>
+      <td class="border p-2">
+        <p
+          [ngClass]="tx.type === 'EXPENSE' ? 'text-red-500' : 'text-green-400'"
+        >
+          {{ tx.type === "EXPENSE" ? "-" : "+" }} Rp
+          {{ tx.amount | number : "1.0-0" }}
+        </p>
+      </td>
+      <td class="border p-2">{{ tx.type }}</td>
+      <td class="border p-2">{{ tx.date }}</td>
+      <td class="border p-2">
+        <button
+          (click)="startEditTransaction(tx)"
+          class="text-blue-600 hover:underline mr-2"
+        >
+          Edit
+        </button>
+        <button
+          (click)="deleteTransaction(tx.id!)"
+          class="text-red-600 hover:underline"
+        >
+          Hapus
+        </button>
+      </td>
+    </tr>
+    } @if (transactions.length === 0) {
+    <tr class="text-center">
+      <td colspan="5" class="p-4 text-gray-500">
+        {{ transactions.length === 0 ? "Tidak ada transaksi" : "oke" }}
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
