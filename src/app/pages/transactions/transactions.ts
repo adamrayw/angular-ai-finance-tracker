@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Transaction } from '../../services/transaction';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DecimalPipe, NgClass } from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-transactions',
-  imports: [DecimalPipe, ReactiveFormsModule, NgClass],
+  imports: [DecimalPipe, ReactiveFormsModule, NgClass, DatePipe, CommonModule],
   standalone: true,
   templateUrl: './transactions.html',
   styleUrl: './transactions.css'

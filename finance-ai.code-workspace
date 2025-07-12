@@ -4,11 +4,11 @@
 			"path": "."
 		},
 		{
-			"path": "../finance-ai-spring"
+			"path": "../springboot-ai-finance-tracker"
 		}
 	],
 	"settings": {
-		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.configuration.updateBuildConfiguration": "automatic",
 		"java.debug.settings.onBuildFailureProceed": true
 	}
 }

@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Transaction } from '../../services/transaction';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-advisor',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule],
   templateUrl: './advisor.html',
   styleUrl: './advisor.css'
 })
@@ -56,20 +56,20 @@ export class Advisor {
     return html;
   }
 
-startTyping(): void {
-  const interval = setInterval(async () => {
-    if (this.typingIndex < this.fullAdvice.length) {
-      const chunk = this.fullAdvice.substring(0, ++this.typingIndex);
-      this.advice = this.sanitizer.bypassSecurityTrustHtml(
-        await this.processMarkdownChunk(chunk)
-      );
-      this.cdr.markForCheck();
-      this.scrollToBottom();
-    } else {
-      clearInterval(interval);
-    }
-  }, this.typingSpeed);
-}
+  startTyping(): void {
+    const interval = setInterval(async () => {
+      if (this.typingIndex < this.fullAdvice.length) {
+        const chunk = this.fullAdvice.substring(0, ++this.typingIndex);
+        this.advice = this.sanitizer.bypassSecurityTrustHtml(
+          await this.processMarkdownChunk(chunk)
+        );
+        this.cdr.markForCheck();
+        this.scrollToBottom();
+      } else {
+        clearInterval(interval);
+      }
+    }, this.typingSpeed);
+  }
 
   // Tambahkan method untuk auto-scroll
   private scrollToBottom(): void {

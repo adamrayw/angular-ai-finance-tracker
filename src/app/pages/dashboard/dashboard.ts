@@ -1,18 +1,21 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Transaction } from '../../services/transaction';
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Chart } from '../../components/chart/chart';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DecimalPipe, NgClass, DatePipe],
+  imports: [DecimalPipe, NgClass, DatePipe, RouterLink, Chart],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit, OnDestroy {
   transactions: Transaction[] = [];
+  recentTransactions: Transaction[] = [];
+  lastUpdated: Date = new Date();
 
   summary: {
     totalIncome: number,
@@ -31,11 +34,13 @@ export class Dashboard implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Subscribe to router events to detect navigation changes
     this.loadTransactions();
+    this.getRecentTransactions();
 
     // 👇 Tambahkan ini
     this.routerSub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd && this.router.url === '/dashboard') {
         this.loadTransactions();
+        this.getRecentTransactions();
       }
     });
   }
@@ -78,5 +83,12 @@ export class Dashboard implements OnInit, OnDestroy {
 
     console.log('Summary calculated:', this.summary);
 
+  }
+
+  getRecentTransactions(): void {
+    this.txService.getRecentTransactions().subscribe(data => {
+      this.recentTransactions = data;
+      this.cdr.detectChanges();
+    });
   }
 }

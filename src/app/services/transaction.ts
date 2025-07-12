@@ -23,6 +23,10 @@ export class Transaction {
     return req;
   }
 
+  getRecentTransactions(): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(`${this.apiUrl}/recent`);
+  }
+
   create(tx: Transaction): Observable<Transaction> {
     return this.http.post<Transaction>(this.apiUrl, tx);
   }
